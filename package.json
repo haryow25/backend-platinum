@@ -1,5 +1,4 @@
 {
-
   "scripts": {
     "db:create": "NODE_ENV=development npx sequelize db:create",
     "db:migrate": "NODE_ENV=development npx sequelize db:migrate",
@@ -30,5 +29,8 @@
     "pg": "^8.7.3",
     "sequelize": "^6.21.3",
     "swagger-ui-express": "^4.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
   }
 }
