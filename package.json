@@ -5,8 +5,9 @@
     "db:undo:migrate": "NODE_ENV=development npx sequelize db:migrate:undo:all",
     "db:seed": "NODE_ENV=development npx sequelize db:seed:all",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=development node index.js"
+    "test": "jest",
+    "start": "node index.js",
+    "sequelize": "sequelize"
   },
   "repository": {
     "type": "Git",
@@ -17,6 +18,7 @@
   "homepage": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.31.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "ejs": "^3.1.8",
@@ -31,6 +33,7 @@
     "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
+    "jest": "^29.0.1",
     "nodemon": "^2.0.19"
   }
 }

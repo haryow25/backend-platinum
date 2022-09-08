@@ -1,5 +1,6 @@
 const { User, Detail } = require('../models');
 const bcrypt = require('bcryptjs');
+const cloudinary = require('cloudinary')
 
 const getAllUser = async (req, res) => {
   try {
@@ -43,6 +44,34 @@ const updateUser = async (req, res) => {
       bcrypt.genSaltSync(10),
       null
     );
+
+    const userOne = await User.findByPk(req.user.id)
+    if (req.body.avatar !== '') {
+      const image_id = findUser.avatar_public_id;
+
+      await cloudinary.v2.uploader.destroy(image_id)
+      const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: 'binar_chp11/avatar',
+        width: '150',
+        crop: 'scale'
+      })
+
+      await User.update(
+        {
+          first_name,
+          last_name,
+          email,
+          username,
+          password: hashPassword,
+          bio,
+          location,
+          social_media_url,
+          avatar_public_id: result.public_id,
+          avatar_url: result.secure_url,
+        },
+        { where: { id }, returning: true, individualHooks: true }
+      )
+    }
 
     const user = await User.update(
       {

@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User } = require("../models");
 
 module.exports = async (req, res, next) => {
   try {
@@ -8,12 +8,12 @@ module.exports = async (req, res, next) => {
       return next();
     }
     return res.status(401).json({
-      result: 'Failed',
-      message: 'Authorized is Required!',
+      result: "Failed",
+      message: "Authorized is Required!",
     });
   } catch (err) {
     res.status(401).json({
-      message: 'Authorized is Required!',
+      message: "Authorized is Required!",
       errorMessage: err.message,
     });
   }

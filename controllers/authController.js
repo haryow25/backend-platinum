@@ -1,9 +1,17 @@
 const { User } = require('../models');
+const cloudinary = require('cloudinary')
 const { OAuth2Client } = require('google-auth-library');
 const { comparePassword } = require('../helpers/bcrypt');
 const { generateToken } = require('../helpers/jwt');
 const { sendEmail } = require('../helpers/sendEmail');
 const bcrypt = require('bcryptjs');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 
 const format = (user) => {
   const { id, first_name, last_name, email, username } = user;
@@ -36,36 +44,75 @@ const register = async (req, res) => {
   const { first_name, last_name, email, username, password } = req.body;
 
   try {
-    const user = await User.findOne({
+    const userEmail = await User.findOne({
+      where: { email },
+    });
+
+    const validateEmail = (email) => {
+      return String(email)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
+
+    const userName = await User.findOne({
       where: { username },
     });
 
-    if (user) {
+    if (userEmail) {
+      return res
+        .status(409)
+        .json({ result: 'failed', message: 'The email is already registered' });
+    }
+    if (!validateEmail(email)) {
+      return res.status(400).json({
+        result: 'failed',
+        message: 'Please enter valid email address',
+      });
+    }
+
+    if (userName) {
+      return res.status(400).json({
+        message: 'user already exist'
+      })
+    }
+
+    if (password.toString().length < 6) {
+      return res.status(400).json({
+        result: 'failed',
+        message: 'Your password must be longer than 6 characters',
+      });
     }
 
     // throw new Error('another error, e.g internal server error');
-  } catch (err) {
-    return res.status(500).json({
-      result: 'Failed',
-      error: err.message,
-    });
-  }
+ 
 
-  try {
-    User.create ({
-      first_name,
-      last_name,
-      email,
-      username,
-      password,
-    })
-    .then((data) => {
-      return res.status(201).json({
-        result: 'Success',
-        message: 'User Has Been Successfully Created',
-        data: data,
-      });
-    })
+  const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    folder: 'binar_chp11/avatar',
+    width: '150',
+    crop: 'scale',
+  });
+  const user = await User.create({
+    first_name,
+    last_name,
+    email,
+    username,
+    password,
+    avatar_public_id: result.public_id,
+    avatar_url: result.secure_url,
+  });
+
+  return res.status(201).json({
+    result: 'success',
+    message: 'Congratulations, your account has been successfully created.',
+    data: {
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      username: user.username,
+    },
+  });
 
   } catch (err) {
     return res.status(400).json({

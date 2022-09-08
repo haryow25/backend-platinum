@@ -9,6 +9,12 @@ module.exports = {
     database: "dcg524c9or0897",
     host: "ec2-3-223-242-224.compute-1.amazonaws.com",
     dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
   },
   test: {
     username: "xvcfsiawvxhbvw",
@@ -16,6 +22,12 @@ module.exports = {
     database: "dcg524c9or0897",
     host: "ec2-3-223-242-224.compute-1.amazonaws.com",
     dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
   },
   production: {
     username: "xvcfsiawvxhbvw",
@@ -23,5 +35,11 @@ module.exports = {
     database: "dcg524c9or0897",
     host: "ec2-3-223-242-224.compute-1.amazonaws.com",
     dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
   },
 };

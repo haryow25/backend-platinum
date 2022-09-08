@@ -28,11 +28,12 @@ const newGame = (req, res) => {
 const findAll = (req, res) => {
   Game.findAll()
     .then((data) => {
-      res.status(200).json({
-        result: 'Success',
-        message: 'Successfully Retrieve Data.',
-        data: data,
-      });
+      // res.status(200).json({
+      //   result: 'Success',
+      //   message: 'Successfully Retrieve Data.',
+      //   data: data,
+      // });
+      console.log(data)
     })
     .catch((err) => {
       res.status(500).json({
@@ -56,6 +57,7 @@ const findOne = (req, res) => {
           message: 'Game is not Registered',
         });
       }
+      // console.log(!data)
       res.status(200).json({
         result: 'Success',
         message: 'Successfully Retrieve Data',
@@ -63,11 +65,12 @@ const findOne = (req, res) => {
       });
     })
     .catch((err) => {
-      res.status(500).json({
-        result: 'Failed',
-        message: 'Some error occured while retrieving game.',
-        error: err.message,
-      });
+      // res.status(500).json({
+      //   result: 'Failed',
+      //   message: 'Some error occured while retrieving game.',
+      //   error: err.message,
+      // });
+       console.log(err)
     });
 };
 
